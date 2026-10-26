@@ -1,11 +1,1456 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <meta http-equiv="Refresh" content="0; url='https://example.com/'" />
-    <script>window.location.replace("https://example.com/");</script>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=4144eaa6-4d36-48d5-bb13-87654689b3d4
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email & Password Generator — TOOLS by Nugroho Y.R</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink: #111111;
+            --bg: #FFF4D6;
+            --card: #FFFFFF;
+            --pink: #FF3EA5;
+            --blue: #3D8BFF;
+            --yellow: #FFD600;
+            --green: #00E676;
+            --red: #FF3B30;
+            --purple: #8A5CFF;
+            --shadow: 6px 6px 0 var(--ink);
+            --shadow-sm: 3px 3px 0 var(--ink);
+            --border: 3px solid var(--ink);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial Black', Roboto, sans-serif;
+            min-height: 100vh;
+            background: var(--bg);
+            background-image:
+                linear-gradient(var(--ink) 1px, transparent 1px),
+                linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+            background-size: 28px 28px;
+            background-position: -1px -1px;
+            color: var(--ink);
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            background: var(--card);
+            border: 4px solid var(--ink);
+            border-radius: 0;
+            padding: 28px;
+            box-shadow: 10px 10px 0 var(--ink);
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: var(--border);
+            position: relative;
+        }
+        .type-badge {
+            position: absolute;
+            top: -46px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            background: var(--yellow);
+            border: var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .header-icon {
+            width: 72px; height: 72px;
+            margin: 10px auto 14px;
+            background: var(--pink);
+            border: var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            transform: rotate(-2deg);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+        .header p {
+            color: #444;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--bg);
+            padding: 6px;
+            border: var(--border);
+        }
+        .tab {
+            flex: 1;
+            padding: 12px 10px;
+            background: var(--card);
+            border: 2.5px solid var(--ink);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+        .tab:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-sm); }
+        .tab.active {
+            background: var(--purple);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
+            transform: translate(-2px, -2px);
+        }
+
+        /* SETTINGS */
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .settings { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--ink);
+            margin-bottom: 6px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--card);
+            border: 2.5px solid var(--ink);
+            border-radius: 0;
+            color: var(--ink);
+            font-size: 0.9rem;
+            outline: none;
+            transition: box-shadow 0.15s, transform 0.15s;
+            font-family: inherit;
+            font-weight: 600;
+        }
+        .form-group input::placeholder { color: #999; }
+        .form-group input:focus,
+        .form-group select:focus {
+            box-shadow: var(--shadow-sm);
+            transform: translate(-2px, -2px);
+        }
+        .form-group select option { background: #fff; }
+
+        /* SECTION PANEL */
+        .section-panel {
+            display: none;
+        }
+        .section-panel.active { display: block; }
+
+        /* DOMAIN CHECKBOXES */
+        .domains-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .domain-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--card);
+            border: 2.5px solid var(--ink);
+            border-radius: 0;
+            cursor: pointer;
+            transition: transform 0.12s ease;
+            font-size: 0.8rem;
+            font-weight: 700;
+            user-select: none;
+        }
+        .domain-check:hover { transform: translate(-1px, -1px); box-shadow: var(--shadow-sm); }
+        .domain-check.active {
+            background: var(--blue);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
+            transform: translate(-1px, -1px);
+        }
+        .domain-check input {
+            width: auto;
+            margin: 0;
+            accent-color: var(--ink);
+            cursor: pointer;
+        }
+
+        /* PASSWORD OPTIONS */
+        .pw-strength-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .strength-btn {
+            flex: 1;
+            min-width: 90px;
+            padding: 10px 8px;
+            background: var(--card);
+            border: 2.5px solid var(--ink);
+            border-radius: 0;
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s ease;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .strength-btn:hover { transform: translate(-1px, -1px); box-shadow: var(--shadow-sm); }
+        .strength-btn.active {
+            background: var(--yellow);
+            color: var(--ink);
+            box-shadow: var(--shadow-sm);
+            transform: translate(-1px, -1px);
+        }
+
+        .options-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .option-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--card);
+            border: 2.5px solid var(--ink);
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transition: transform 0.12s ease;
+            user-select: none;
+        }
+        .option-toggle:hover { transform: translate(-1px, -1px); box-shadow: var(--shadow-sm); }
+        .option-toggle.active {
+            background: var(--green);
+            box-shadow: var(--shadow-sm);
+            transform: translate(-1px, -1px);
+        }
+        .option-toggle input {
+            width: auto;
+            margin: 0;
+            accent-color: var(--ink);
+        }
+
+        /* PASSWORD LENGTH SLIDER */
+        .slider-row {
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+        .slider-row label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--ink);
+            margin-bottom: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .slider-row label .val {
+            color: var(--ink);
+            background: var(--yellow);
+            border: 2px solid var(--ink);
+            padding: 1px 8px;
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+        .pw-slider {
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            height: 10px;
+            background: var(--card);
+            border-radius: 0;
+            outline: none;
+            border: 2.5px solid var(--ink);
+        }
+        .pw-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--pink);
+            border-radius: 0;
+            cursor: pointer;
+            border: 2.5px solid var(--ink);
+        }
+        .pw-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            background: var(--pink);
+            border-radius: 0;
+            cursor: pointer;
+            border: 2.5px solid var(--ink);
+        }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 14px 20px;
+            border: 3px solid var(--ink);
+            border-radius: 0;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: var(--pink);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink);
+        }
+        .btn-secondary {
+            background: var(--card);
+            color: var(--ink);
+        }
+        .btn-secondary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink);
+        }
+        .btn-success {
+            background: var(--green);
+            color: var(--ink);
+        }
+        .btn-success:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink);
+        }
+        .btn-danger {
+            background: var(--red);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink);
+        }
+
+        /* RESULT */
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: var(--border);
+        }
+        .result-header h3 {
+            font-size: 0.9rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-count {
+            background: var(--blue);
+            color: #fff;
+            border: 2px solid var(--ink);
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .results-box {
+            max-height: 400px;
+            overflow-y: auto;
+            border: var(--border);
+        }
+
+        .account-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 14px;
+            border-bottom: 2.5px solid var(--ink);
+            font-size: 0.8rem;
+        }
+        .account-item:hover {
+            background: var(--yellow);
+        }
+        .account-item:last-child { border-bottom: none; }
+
+        .account-info {
+            min-width: 0;
+        }
+        .account-email {
+            color: var(--ink);
+            font-weight: 800;
+            word-break: break-all;
+            margin-bottom: 4px;
+        }
+        .account-pass {
+            color: var(--ink);
+            word-break: break-all;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .account-pass .label {
+            color: #666;
+            margin-right: 6px;
+            font-weight: 700;
+        }
+        .account-strength {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border: 2px solid var(--ink);
+            margin-left: 6px;
+            font-weight: 800;
+        }
+        .account-strength.weak { background: var(--red); color: #fff; }
+        .account-strength.medium { background: var(--yellow); color: var(--ink); }
+        .account-strength.strong { background: var(--green); color: var(--ink); }
+        .account-strength.very-strong { background: var(--purple); color: #fff; }
+
+        .account-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .mini-btn {
+            padding: 6px 10px;
+            background: var(--card);
+            border: 2px solid var(--ink);
+            border-radius: 0;
+            color: var(--ink);
+            font-size: 0.65rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .mini-btn:hover {
+            background: var(--blue);
+            color: #fff;
+            transform: translate(-1px, -1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        .empty-state .icon {
+            font-size: 3rem;
+            opacity: 0.4;
+            margin-bottom: 10px;
+        }
+
+        /* INFO */
+        .info {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: var(--bg);
+            border: 2.5px solid var(--ink);
+            font-size: 0.75rem;
+            color: var(--ink);
+            line-height: 1.6;
+            font-weight: 600;
+        }
+        .info b { color: var(--ink); }
+
+        /* FOOTER / CREDIT */
+        .app-footer {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #444;
+        }
+        .app-footer .dev-badge {
+            background: var(--ink);
+            color: var(--yellow);
+            border: 2px solid var(--ink);
+            padding: 4px 10px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--card);
+            border: 3px solid var(--ink);
+            border-radius: 0;
+            color: var(--ink);
+            font-size: 0.85rem;
+            font-weight: 800;
+            z-index: 9999;
+            box-shadow: var(--shadow-sm);
+            max-width: 300px;
+        }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--red); color: #fff; }
+
+        @media (max-width: 500px) {
+            .app { padding: 20px 15px; }
+            .header h1 { font-size: 1.2rem; }
+            .header-icon { width: 60px; height: 60px; font-size: 30px; }
+            .account-item { grid-template-columns: 1fr; }
+            .account-actions { justify-content: flex-end; }
+        }
+    </style>
 </head>
-<body style="margin:0;padding:0;background-color:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;">
-    Redirecting...
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="type-badge">🛠️ TOOLS</div>
+        <div class="header-icon">📧</div>
+        <h1>Email + Password Generator</h1>
+        <p>Generate akun lengkap — email & password</p>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab active" data-tab="both">Email + Password</button>
+        <button class="tab" data-tab="email">Email Only</button>
+        <button class="tab" data-tab="password">Password Only</button>
+    </div>
+
+    <!-- SECTION: EMAIL + PASSWORD -->
+    <div class="section-panel active" id="panelBoth">
+        <div class="settings">
+            <div class="form-group">
+                <label>Nama Depan (opsional)</label>
+                <input type="text" id="fnBoth" placeholder="Andre" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label>Nama Belakang (opsional)</label>
+                <input type="text" id="lnBoth" placeholder="Wijaya" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label>Jumlah Akun</label>
+                <input type="number" id="countBoth" value="5" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>Format Email</label>
+                <select id="formatBoth">
+                    <option value="firstlast">namadepan.namabelakang</option>
+                    <option value="first_last">namadepan_namabelakang</option>
+                    <option value="firstlast_num">namadepan.namabelakang123</option>
+                    <option value="random">Random string</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Pilih Domain</label>
+                <div class="domains-grid" id="domainsBoth">
+                    <label class="domain-check active">
+                        <input type="checkbox" value="gmail.com" checked>
+                        <span>@gmail.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="yahoo.com">
+                        <span>@yahoo.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="outlook.com">
+                        <span>@outlook.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="hotmail.com">
+                        <span>@hotmail.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="protonmail.com">
+                        <span>@protonmail.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="icloud.com">
+                        <span>@icloud.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="zoho.com">
+                        <span>@zoho.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="gmx.com">
+                        <span>@gmx.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="tutamail.com">
+                        <span>@tutamail.com</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- PASSWORD STRENGTH -->
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Kekuatan Password</label>
+                <div class="pw-strength-row" id="strengthBoth">
+                    <button class="strength-btn" data-strength="weak">Simple</button>
+                    <button class="strength-btn active" data-strength="medium">Medium</button>
+                    <button class="strength-btn" data-strength="strong">Strong</button>
+                    <button class="strength-btn" data-strength="very-strong">Extreme</button>
+                </div>
+            </div>
+
+            <!-- PASSWORD LENGTH -->
+            <div class="slider-row">
+                <label>
+                    <span>Panjang Password</span>
+                    <span class="val" id="pwLengthValBoth">12</span>
+                </label>
+                <input type="range" class="pw-slider" id="pwLengthBoth" min="6" max="32" value="12">
+            </div>
+
+            <!-- OPTIONS -->
+            <div class="options-row">
+                <label class="option-toggle active">
+                    <input type="checkbox" id="uniqueBoth" checked>
+                    <span>Anti-duplikat</span>
+                </label>
+                <label class="option-toggle active">
+                    <input type="checkbox" id="lowerBoth" checked>
+                    <span>Email huruf kecil</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="btn-group">
+            <button class="btn btn-primary" id="generateBothBtn">GENERATE</button>
+            <button class="btn btn-success" id="downloadBothBtn">💾 CSV</button>
+            <button class="btn btn-secondary" id="copyBothBtn">COPY ALL</button>
+        </div>
+
+        <!-- RESULT -->
+        <div class="result-header">
+            <h3>Hasil</h3>
+            <span class="result-count" id="resultCountBoth">0 akun</span>
+        </div>
+
+        <div class="results-box" id="resultsBoth">
+            <div class="empty-state">
+                <div class="icon">📭</div>
+                <div>Belum ada akun yang di-generate</div>
+                <div style="font-size: 0.7rem; margin-top: 5px;">Klik GENERATE buat mulai</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: EMAIL ONLY -->
+    <div class="section-panel" id="panelEmail">
+        <div class="settings">
+            <div class="form-group">
+                <label>Nama Depan (opsional)</label>
+                <input type="text" id="fnEmail" placeholder="Andre" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label>Nama Belakang (opsional)</label>
+                <input type="text" id="lnEmail" placeholder="Wijaya" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label>Jumlah Email</label>
+                <input type="number" id="countEmail" value="10" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>Format</label>
+                <select id="formatEmail">
+                    <option value="firstlast">namadepan.namabelakang</option>
+                    <option value="first_last">namadepan_namabelakang</option>
+                    <option value="firstlast_num">namadepan.namabelakang123</option>
+                    <option value="random">Random string</option>
+                    <option value="first_year">namadepan.tahun</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Pilih Domain</label>
+                <div class="domains-grid" id="domainsEmail">
+                    <label class="domain-check active">
+                        <input type="checkbox" value="gmail.com" checked>
+                        <span>@gmail.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="yahoo.com">
+                        <span>@yahoo.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="outlook.com">
+                        <span>@outlook.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="protonmail.com">
+                        <span>@protonmail.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="icloud.com">
+                        <span>@icloud.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="zoho.com">
+                        <span>@zoho.com</span>
+                    </label>
+                    <label class="domain-check">
+                        <input type="checkbox" value="tutamail.com">
+                        <span>@tutamail.com</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="options-row">
+                <label class="option-toggle active">
+                    <input type="checkbox" id="uniqueEmail" checked>
+                    <span>Anti-duplikat</span>
+                </label>
+                <label class="option-toggle active">
+                    <input type="checkbox" id="lowerEmail" checked>
+                    <span>Huruf kecil</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="generateEmailBtn">GENERATE</button>
+            <button class="btn btn-success" id="downloadEmailBtn">💾 TXT</button>
+            <button class="btn btn-secondary" id="copyEmailBtn">COPY ALL</button>
+        </div>
+
+        <div class="result-header">
+            <h3>Hasil</h3>
+            <span class="result-count" id="resultCountEmail">0 email</span>
+        </div>
+
+        <div class="results-box" id="resultsEmail">
+            <div class="empty-state">
+                <div class="icon">📭</div>
+                <div>Belum ada email</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: PASSWORD ONLY -->
+    <div class="section-panel" id="panelPassword">
+        <div class="settings">
+            <div class="form-group">
+                <label>Jumlah Password</label>
+                <input type="number" id="countPass" value="10" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>Panjang</label>
+                <input type="number" id="lengthPass" value="16" min="6" max="64">
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Kekuatan</label>
+                <div class="pw-strength-row" id="strengthPass">
+                    <button class="strength-btn" data-strength="weak">Simple</button>
+                    <button class="strength-btn active" data-strength="medium">Medium</button>
+                    <button class="strength-btn" data-strength="strong">Strong</button>
+                    <button class="strength-btn" data-strength="very-strong">Extreme</button>
+                </div>
+            </div>
+
+            <div class="options-row">
+                <label class="option-toggle active">
+                    <input type="checkbox" id="uniquePass" checked>
+                    <span>Anti-duplikat</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="generatePassBtn">GENERATE</button>
+            <button class="btn btn-success" id="downloadPassBtn">💾 TXT</button>
+            <button class="btn btn-secondary" id="copyPassBtn">COPY ALL</button>
+        </div>
+
+        <div class="result-header">
+            <h3>Hasil</h3>
+            <span class="result-count" id="resultCountPass">0 password</span>
+        </div>
+
+        <div class="results-box" id="resultsPass">
+            <div class="empty-state">
+                <div class="icon">🔐</div>
+                <div>Belum ada password</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="info">
+        <b>Tips:</b> Klik buat akun lalu copy email + password sekaligus.<br>
+        <b>Penting:</b> Data asli buat pribadi — jangan dipakai buat akun yang mencurigakan. Gunakan untuk membuat akun gmail/proton/yahoo atau yang terdaftar di web ini.
+    </div>
+
+    <!-- FOOTER -->
+    <div class="app-footer">
+        <span>Email + Password Generator</span>
+        <span class="dev-badge">Developer: Nugroho Y.R</span>
+    </div>
+
+</div>
+
+<script>
+    // @ts-nocheck
+    // ============================================================
+    // EMAIL + PASSWORD GENERATOR - NEXBOX V4
+    // ============================================================
+
+    // ===== DATA POOLS =====
+    const FIRST_NAMES = [
+        'andre', 'budi', 'citra', 'dewi', 'eka', 'fajar', 'gita', 'hendra',
+        'indah', 'joko', 'kartika', 'lina', 'maya', 'nanda', 'okta', 'putri',
+        'rendi', 'sinta', 'tono', 'umi', 'vina', 'wahyu', 'yoga', 'zaki',
+        'alex', 'brian', 'chris', 'david', 'emma', 'frank', 'grace', 'henry',
+        'ivan', 'julia', 'kevin', 'laura', 'michael', 'nina', 'oscar', 'peter',
+        'aiden', 'bella', 'carlos', 'diana', 'ethan', 'fiona', 'gabriel', 'hannah'
+    ];
+
+    const LAST_NAMES = [
+        'wijaya', 'saputra', 'pratama', 'kusuma', 'setiawan', 'hidayat', 'susanto',
+        'gunawan', 'firmansyah', 'nugroho', 'wibowo', 'hartono', 'kurniawan',
+        'smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller',
+        'davis', 'rodriguez', 'martinez', 'hernandez', 'lopez', 'wilson',
+        'anderson', 'thomas', 'taylor', 'moore', 'jackson', 'martin', 'lee'
+    ];
+
+    // ===== PASSWORD CHARACTER POOLS =====
+    const CHARS = {
+        lowercase: 'abcdefghijklmnopqrstuvwxyz',
+        uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        numbers: '0123456789',
+        symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+    };
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function toast(msg, type = '') {
+        const t = document.createElement('div');
+        t.className = 'toast ' + type;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.opacity = '0';
+            t.style.transition = 'opacity 0.3s';
+            setTimeout(() => t.remove(), 300);
+        }, 2200);
+    }
+
+    // ============================================================
+    // RANDOM HELPERS
+    // ============================================================
+    function randomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function randomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomString(length, pool) {
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += pool[Math.floor(Math.random() * pool.length)];
+        }
+        return result;
+    }
+
+    // ============================================================
+    // PASSWORD GENERATOR
+    // ============================================================
+    function generatePassword(length, strength) {
+        let pool = '';
+        let mustInclude = [];
+
+        switch (strength) {
+            case 'weak':
+                pool = CHARS.lowercase + CHARS.numbers;
+                break;
+            case 'medium':
+                pool = CHARS.lowercase + CHARS.uppercase + CHARS.numbers;
+                mustInclude = [
+                    CHARS.lowercase[randomNumber(0, CHARS.lowercase.length - 1)],
+                    CHARS.uppercase[randomNumber(0, CHARS.uppercase.length - 1)],
+                    CHARS.numbers[randomNumber(0, CHARS.numbers.length - 1)]
+                ];
+                break;
+            case 'strong':
+                pool = CHARS.lowercase + CHARS.uppercase + CHARS.numbers + CHARS.symbols;
+                mustInclude = [
+                    CHARS.lowercase[randomNumber(0, CHARS.lowercase.length - 1)],
+                    CHARS.uppercase[randomNumber(0, CHARS.uppercase.length - 1)],
+                    CHARS.numbers[randomNumber(0, CHARS.numbers.length - 1)],
+                    CHARS.symbols[randomNumber(0, CHARS.symbols.length - 1)]
+                ];
+                break;
+            case 'very-strong':
+                pool = CHARS.lowercase + CHARS.uppercase + CHARS.numbers + CHARS.symbols;
+                mustInclude = [
+                    CHARS.lowercase[randomNumber(0, CHARS.lowercase.length - 1)],
+                    CHARS.uppercase[randomNumber(0, CHARS.uppercase.length - 1)],
+                    CHARS.numbers[randomNumber(0, CHARS.numbers.length - 1)],
+                    CHARS.symbols[randomNumber(0, CHARS.symbols.length - 1)],
+                    CHARS.symbols[randomNumber(0, CHARS.symbols.length - 1)]
+                ];
+                break;
+            default:
+                pool = CHARS.lowercase + CHARS.uppercase + CHARS.numbers;
+        }
+
+        // Generate base password
+        let password = randomString(length, pool);
+
+        // Replace some characters with must-include ones
+        let arr = password.split('');
+        mustInclude.forEach((ch) => {
+            const pos = randomNumber(0, arr.length - 1);
+            arr[pos] = ch;
+        });
+
+        return arr.join('');
+    }
+
+    // ============================================================
+    // PASSWORD STRENGTH EVALUATOR
+    // ============================================================
+    function evaluateStrength(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (password.length >= 12) score++;
+        if (password.length >= 16) score++;
+        if (/[a-z]/.test(password)) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+        if (score <= 2) return { label: 'WEAK', class: 'weak' };
+        if (score <= 4) return { label: 'MEDIUM', class: 'medium' };
+        if (score <= 5) return { label: 'STRONG', class: 'strong' };
+        return { label: 'EXTREME', class: 'very-strong' };
+    }
+
+    // ============================================================
+    // EMAIL BUILDER
+    // ============================================================
+    function buildEmail(fn, ln, format, domain, lowercase) {
+        let localPart = '';
+
+        switch (format) {
+            case 'firstlast':
+                localPart = `${fn}.${ln}`;
+                break;
+            case 'first_last':
+                localPart = `${fn}_${ln}`;
+                break;
+            case 'firstlast_num':
+                localPart = `${fn}.${ln}${randomNumber(1, 999)}`;
+                break;
+            case 'random':
+                localPart = randomString(randomNumber(6, 12), CHARS.lowercase + CHARS.numbers);
+                break;
+            case 'first_year':
+                localPart = `${fn}.${randomNumber(1980, 2010)}`;
+                break;
+        }
+
+        localPart = localPart.replace(/[^a-z0-9._]/gi, '');
+        if (lowercase) localPart = localPart.toLowerCase();
+
+        return `${localPart}@${domain}`;
+    }
+
+    // ============================================================
+    // GET DOMAINS
+    // ============================================================
+    function getDomains(containerId) {
+        const checks = document.querySelectorAll(`#${containerId} input:checked`);
+        return Array.from(checks).map(c => c.value);
+    }
+
+    // ============================================================
+    // TABS
+    // ============================================================
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+            const target = tab.dataset.tab;
+            const panelId = 'panel' + target.charAt(0).toUpperCase() + target.slice(1);
+            document.getElementById(panelId).classList.add('active');
+        });
+    });
+
+    // ============================================================
+    // STRENGTH BUTTONS
+    // ============================================================
+    document.querySelectorAll('.pw-strength-row').forEach(row => {
+        const buttons = row.querySelectorAll('.strength-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    });
+
+    function getActiveStrength(rowId) {
+        const active = document.querySelector(`#${rowId} .strength-btn.active`);
+        return active ? active.dataset.strength : 'medium';
+    }
+
+    // ============================================================
+    // OPTION TOGGLES
+    // ============================================================
+    document.querySelectorAll('.option-toggle').forEach(label => {
+        const cb = label.querySelector('input');
+        cb.addEventListener('change', () => {
+            label.classList.toggle('active', cb.checked);
+        });
+    });
+
+    // ============================================================
+    // DOMAIN CHECKS
+    // ============================================================
+    document.querySelectorAll('.domain-check').forEach(label => {
+        const cb = label.querySelector('input');
+        cb.addEventListener('change', () => {
+            label.classList.toggle('active', cb.checked);
+        });
+    });
+
+    // ============================================================
+    // SLIDER
+    // ============================================================
+    document.getElementById('pwLengthBoth').addEventListener('input', (e) => {
+        document.getElementById('pwLengthValBoth').textContent = e.target.value;
+    });
+
+    // ============================================================
+    // SECTION 1: EMAIL + PASSWORD
+    // ============================================================
+    let accountsBoth = [];
+
+    function generateBoth() {
+        const fnInput = document.getElementById('fnBoth').value.trim();
+        const lnInput = document.getElementById('lnBoth').value.trim();
+        const count = Math.min(100, Math.max(1, parseInt(document.getElementById('countBoth').value) || 5));
+        const format = document.getElementById('formatBoth').value;
+        const lowercase = document.getElementById('lowerBoth').checked;
+        const unique = document.getElementById('uniqueBoth').checked;
+        const pwLength = parseInt(document.getElementById('pwLengthBoth').value);
+        const strength = getActiveStrength('strengthBoth');
+        const domains = getDomains('domainsBoth');
+
+        if (domains.length === 0) {
+            toast('Pilih minimal 1 domain!', 'error');
+            return;
+        }
+
+        accountsBoth = [];
+        const seen = new Set();
+        let attempts = 0;
+        const maxAttempts = count * 20;
+
+        while (accountsBoth.length < count && attempts < maxAttempts) {
+            attempts++;
+            const fn = fnInput || randomItem(FIRST_NAMES);
+            const ln = lnInput || randomItem(LAST_NAMES);
+            const domain = randomItem(domains);
+            const email = buildEmail(fn, ln, format, domain, lowercase);
+
+            if (unique && seen.has(email)) continue;
+            seen.add(email);
+
+            const password = generatePassword(pwLength, strength);
+            accountsBoth.push({ email, password });
+        }
+
+        renderBoth();
+        toast(`✅ ${accountsBoth.length} akun di-generate!`, 'success');
+    }
+
+    function renderBoth() {
+        const box = document.getElementById('resultsBoth');
+        const count = document.getElementById('resultCountBoth');
+        count.textContent = `${accountsBoth.length} akun`;
+
+        if (accountsBoth.length === 0) {
+            box.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div>Belum ada akun</div></div>`;
+            return;
+        }
+
+        box.innerHTML = '';
+        accountsBoth.forEach((acc, i) => {
+            const strength = evaluateStrength(acc.password);
+            const item = document.createElement('div');
+            item.className = 'account-item';
+            item.style.animationDelay = (i * 0.02) + 's';
+            item.innerHTML = `
+                <div class="account-info">
+                    <div class="account-email">📧 ${escapeHtml(acc.email)}</div>
+                    <div class="account-pass">
+                        <span class="label">🔑</span>${escapeHtml(acc.password)}
+                        <span class="account-strength ${strength.class}">${strength.label}</span>
+                    </div>
+                </div>
+                <div class="account-actions">
+                    <button class="mini-btn" data-copy="email">📧</button>
+                    <button class="mini-btn" data-copy="pass">🔑</button>
+                    <button class="mini-btn" data-copy="both">📋</button>
+                </div>
+            `;
+
+            // Click handlers
+            item.querySelector('[data-copy="email"]').addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(acc.email);
+                toast('Email dicopy!', 'success');
+            });
+            item.querySelector('[data-copy="pass"]').addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(acc.password);
+                toast('Password dicopy!', 'success');
+            });
+            item.querySelector('[data-copy="both"]').addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(`${acc.email}\n${acc.password}`);
+                toast('Email + Password dicopy!', 'success');
+            });
+
+            box.appendChild(item);
+        });
+    }
+
+    function downloadBoth() {
+        if (accountsBoth.length === 0) {
+            toast('Belum ada akun!', 'error');
+            return;
+        }
+
+        let csv = 'Email,Password,Strength\n';
+        accountsBoth.forEach(acc => {
+            const s = evaluateStrength(acc.password);
+            csv += `"${acc.email}","${acc.password}","${s.label}"\n`;
+        });
+
+        downloadFile(csv, `accounts_${Date.now()}.csv`, 'text/csv');
+        toast(`💾 ${accountsBoth.length} akun di-download!`, 'success');
+    }
+
+    function copyBoth() {
+        if (accountsBoth.length === 0) {
+            toast('Belum ada akun!', 'error');
+            return;
+        }
+        const text = accountsBoth.map(a => `${a.email} | ${a.password}`).join('\n');
+        copyToClipboard(text);
+        toast(`📋 ${accountsBoth.length} akun dicopy!`, 'success');
+    }
+
+    // ============================================================
+    // SECTION 2: EMAIL ONLY
+    // ============================================================
+    let emailsOnly = [];
+
+    function generateEmailOnly() {
+        const fn = document.getElementById('fnEmail').value.trim();
+        const ln = document.getElementById('lnEmail').value.trim();
+        const count = Math.min(100, Math.max(1, parseInt(document.getElementById('countEmail').value) || 10));
+        const format = document.getElementById('formatEmail').value;
+        const lowercase = document.getElementById('lowerEmail').checked;
+        const unique = document.getElementById('uniqueEmail').checked;
+        const domains = getDomains('domainsEmail');
+
+        if (domains.length === 0) {
+            toast('Pilih minimal 1 domain!', 'error');
+            return;
+        }
+
+        emailsOnly = [];
+        const seen = new Set();
+        let attempts = 0;
+
+        while (emailsOnly.length < count && attempts < count * 20) {
+            attempts++;
+            const f = fn || randomItem(FIRST_NAMES);
+            const l = ln || randomItem(LAST_NAMES);
+            const d = randomItem(domains);
+            const email = buildEmail(f, l, format, d, lowercase);
+
+            if (unique && seen.has(email)) continue;
+            seen.add(email);
+            emailsOnly.push(email);
+        }
+
+        renderEmailOnly();
+        toast(`✅ ${emailsOnly.length} email di-generate!`, 'success');
+    }
+
+    function renderEmailOnly() {
+        const box = document.getElementById('resultsEmail');
+        document.getElementById('resultCountEmail').textContent = `${emailsOnly.length} email`;
+
+        if (emailsOnly.length === 0) {
+            box.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div>Belum ada email</div></div>`;
+            return;
+        }
+
+        box.innerHTML = '';
+        emailsOnly.forEach((email, i) => {
+            const item = document.createElement('div');
+            item.className = 'account-item';
+            item.style.animationDelay = (i * 0.02) + 's';
+            item.innerHTML = `
+                <div class="account-info">
+                    <div class="account-email">📧 ${escapeHtml(email)}</div>
+                </div>
+                <div class="account-actions">
+                    <button class="mini-btn">📋</button>
+                </div>
+            `;
+            item.addEventListener('click', () => {
+                copyToClipboard(email);
+                toast('📧 Email dicopy!', 'success');
+            });
+            box.appendChild(item);
+        });
+    }
+
+    function downloadEmailOnly() {
+        if (emailsOnly.length === 0) return toast('Belum ada email!', 'error');
+        downloadFile(emailsOnly.join('\n'), `emails_${Date.now()}.txt`, 'text/plain');
+        toast(`💾 ${emailsOnly.length} email di-download!`, 'success');
+    }
+
+    function copyEmailOnly() {
+        if (emailsOnly.length === 0) return toast('Belum ada email!', 'error');
+        copyToClipboard(emailsOnly.join('\n'));
+        toast(`📋 ${emailsOnly.length} email dicopy!`, 'success');
+    }
+
+    // ============================================================
+    // SECTION 3: PASSWORD ONLY
+    // ============================================================
+    let passwordsOnly = [];
+
+    function generatePassOnly() {
+        const count = Math.min(100, Math.max(1, parseInt(document.getElementById('countPass').value) || 10));
+        const length = Math.min(64, Math.max(6, parseInt(document.getElementById('lengthPass').value) || 16));
+        const strength = getActiveStrength('strengthPass');
+        const unique = document.getElementById('uniquePass').checked;
+
+        passwordsOnly = [];
+        const seen = new Set();
+        let attempts = 0;
+
+        while (passwordsOnly.length < count && attempts < count * 20) {
+            attempts++;
+            const pw = generatePassword(length, strength);
+            if (unique && seen.has(pw)) continue;
+            seen.add(pw);
+            passwordsOnly.push(pw);
+        }
+
+        renderPassOnly();
+        toast(`✅ ${passwordsOnly.length} password di-generate!`, 'success');
+    }
+
+    function renderPassOnly() {
+        const box = document.getElementById('resultsPass');
+        document.getElementById('resultCountPass').textContent = `${passwordsOnly.length} password`;
+
+        if (passwordsOnly.length === 0) {
+            box.innerHTML = `<div class="empty-state"><div class="icon">🔐</div><div>Belum ada password</div></div>`;
+            return;
+        }
+
+        box.innerHTML = '';
+        passwordsOnly.forEach((pw, i) => {
+            const strength = evaluateStrength(pw);
+            const item = document.createElement('div');
+            item.className = 'account-item';
+            item.style.animationDelay = (i * 0.02) + 's';
+            item.innerHTML = `
+                <div class="account-info">
+                    <div class="account-email" style="color:#ffdd00; font-family:'Courier New',monospace;">🔑 ${escapeHtml(pw)}</div>
+                    <div style="font-size:0.65rem;color:#6a5a88;margin-top:4px;">
+                        Length: ${pw.length} chars
+                        <span class="account-strength ${strength.class}">${strength.label}</span>
+                    </div>
+                </div>
+                <div class="account-actions">
+                    <button class="mini-btn">📋</button>
+                </div>
+            `;
+            item.addEventListener('click', () => {
+                copyToClipboard(pw);
+                toast('Password dicopy!', 'success');
+            });
+            box.appendChild(item);
+        });
+    }
+
+    function downloadPassOnly() {
+        if (passwordsOnly.length === 0) return toast('Belum ada password!', 'error');
+        downloadFile(passwordsOnly.join('\n'), `passwords_${Date.now()}.txt`, 'text/plain');
+        toast(`💾 ${passwordsOnly.length} password di-download!`, 'success');
+    }
+
+    function copyPassOnly() {
+        if (passwordsOnly.length === 0) return toast('Belum ada password!', 'error');
+        copyToClipboard(passwordsOnly.join('\n'));
+        toast(`📋 ${passwordsOnly.length} password dicopy!`, 'success');
+    }
+
+    // ============================================================
+    // UTILS
+    // ============================================================
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        document.body.removeChild(ta);
+    }
+
+    function downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    // ============================================================
+    // BUTTONS
+    // ============================================================
+    document.getElementById('generateBothBtn').addEventListener('click', generateBoth);
+    document.getElementById('downloadBothBtn').addEventListener('click', downloadBoth);
+    document.getElementById('copyBothBtn').addEventListener('click', copyBoth);
+
+    document.getElementById('generateEmailBtn').addEventListener('click', generateEmailOnly);
+    document.getElementById('downloadEmailBtn').addEventListener('click', downloadEmailOnly);
+    document.getElementById('copyEmailBtn').addEventListener('click', copyEmailOnly);
+
+    document.getElementById('generatePassBtn').addEventListener('click', generatePassOnly);
+    document.getElementById('downloadPassBtn').addEventListener('click', downloadPassOnly);
+    document.getElementById('copyPassBtn').addEventListener('click', copyPassOnly);
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    generateBoth();
+
+    console.log('Email + Password Generator - NEXBOX V4 READY');
+</script>
+
 </body>
 </html>
